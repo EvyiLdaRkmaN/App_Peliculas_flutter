@@ -1,4 +1,5 @@
 import 'package:app_peliculas/src/providers/peliculas_providers.dart';
+import 'package:app_peliculas/src/search/search_deleate.dart';
 import 'package:app_peliculas/src/widgets/movie_horizontal.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,9 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    peliculasProviders.getPopulares();
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -25,7 +29,9 @@ class HomePage extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
-            onPressed: (){},
+            onPressed: (){
+              showSearch(context: context,delegate: DataSearch());
+            },
           ),
         ],
       ),
@@ -74,11 +80,14 @@ class HomePage extends StatelessWidget {
               style: Theme.of(context).textTheme.subhead,)
           ),
           SizedBox(height: 5.0),
-          FutureBuilder(
-            future: peliculasProviders.getPopulares(),
+          StreamBuilder(
+            stream: peliculasProviders.popularesStream,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
-                return MovieHorizontal(peliculas: snapshot.data,);
+                return MovieHorizontal(
+                  peliculas: snapshot.data,
+                  siguientePagina: peliculasProviders.getPopulares
+                );
               }else{
                 return Container(
                   child: Center(
