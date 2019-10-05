@@ -10,9 +10,6 @@ class Validators{
 
       final geoScans = scans.where((s)=>s.tipo == 'geo').toList();
       sink.add(geoScans);
-
-
-
     }
   );
 
